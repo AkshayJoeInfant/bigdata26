@@ -1,0 +1,26 @@
+version: 2
+
+sources:
+  - name: raw_layer
+    database: your-project-id  # REPLACE with your GCP Project ID
+    schema: raw_layer
+    tables:
+      - name: orders_stream
+        description: "Landing table for real-time order events from Pub/Sub."
+        columns:
+          - name: order_id
+            tests:
+              - unique
+              - not_null
+          - name: amount
+            description: "Total value of the transaction."
+            tests:
+              - dbt_expectations.expect_column_values_to_be_between:
+                  min_value: 0  # Quality check: No negative sales
+
+      - name: users_batch
+        description: "Landing table for daily user profile updates."
+        columns:
+          - name: user_id
+            tests:
+              - not_null

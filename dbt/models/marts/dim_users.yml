@@ -1,0 +1,17 @@
+version: 2
+
+models:
+  - name: dim_users
+    description: "SCD Type 2 table tracking user history (address, email changes)."
+    columns:
+      - name: user_pk
+        description: "The surrogate key for the version of the user record."
+        tests:
+          - unique
+          - not_null
+      - name: is_current
+        description: "Boolean flag identifying the latest active record."
+      - name: valid_from
+        description: "Timestamp when this version became active."
+      - name: valid_to
+        description: "Timestamp when this version was superseded (null if current)."
